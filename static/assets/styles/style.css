@@ -3,12 +3,15 @@ nav {
 }
 
 .search-bar {
-    border: 1px solid black;
-    border-radius: 10px;
     padding: 5px;
     margin-top: 70px;
     margin-left: 30%;
     margin-right: 30%;
+}
+
+.search-bar input {
+    border-radius: 10px;
+    width: 90%;
 }
 
 .events {
@@ -47,4 +50,20 @@ nav {
 .activity-post img {
     height: 380px;
     width: auto;
+}
+
+.container-avis {
+    display: flex;
+    padding: 50px 70px;
+    gap: 70px;
+    background-color: #e9e3d5;
+    justify-content: center;
+}
+
+.avis {
+    margin-top: 100px;
+}
+
+footer {
+    background-color: #e9e3d5;
 }
