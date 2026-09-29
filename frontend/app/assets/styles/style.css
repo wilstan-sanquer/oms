@@ -36,7 +36,6 @@ nav {
 }
 
 .events {
-    border: 1px solid red;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -55,7 +54,6 @@ nav {
 }
 
 .activity {
-    border: 1px solid red;
     display: flex;
     flex-direction: column;
     gap: 20px;

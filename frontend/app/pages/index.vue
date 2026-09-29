@@ -11,7 +11,7 @@
 
 
 
-  <div class="events">
+  <div class="events mb-5">
       <h3>Nos prochains événements</h3>
       <div class="events-post">
         <img src="../assets/images/affiches/affiche1.png" alt="Affiche événement 1">
@@ -20,35 +20,48 @@
       </div>
     </div>
 
-    <div class="activity">
-      <h3>Nos activités</h3>
-      <div class="activity-post">
-        <div class="d-flex flex-column gap-3">
-          <img src="../assets/images/sports/football.jpg" alt="Football" class="rounded-4 w-25 h-auto">
-          <p>Football</p>
+  <div class="activity container my-4">
+    <h3 class="fw-normal mb-3">Nos activités</h3>
+
+    <div class="row row-cols-4 g-4">
+      <div class="col">
+        <div class="ratio ratio-4x3">
+          <img src="../assets/images/sports/football.jpg" alt="Football" class="rounded-3 object-fit-cover">
         </div>
-        <div>
-          <img src="" alt="">
-          <p></p>
-        </div>
-        <div>
-          <img src="" alt="">
-          <p></p>
-        </div>
-        <div>
-          <img src="" alt="">
-          <p></p>
-        </div>
+        <p class="mt-2 mb-0">Football</p>
       </div>
-      <NuxtLink to="/activity" class="text-decoration-none text-black">
-        Voir plus d'activités
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path d="M17 7l-10 10" />
-          <path d="M8 7l9 0l0 9" />
-        </svg>
-      </NuxtLink>
+
+      <div class="col">
+        <div class="ratio ratio-4x3">
+          <img src="../assets/images/sports/basketball.jpg" alt="Basketball" class="rounded-3 object-fit-cover">
+        </div>
+        <p class="mt-2 mb-0">Basketball</p>
+      </div>
+
+      <div class="col">
+        <div class="ratio ratio-4x3">
+          <img src="../assets/images/sports/tennis.jpg" alt="Tennis" class="rounded-3 object-fit-cover">
+        </div>
+        <p class="mt-2 mb-0">Tennis</p>
+      </div>
+
+      <div class="col">
+        <div class="ratio ratio-4x3">
+          <img src="../assets/images/sports/handball.jpg" alt="Handball" class="rounded-3 object-fit-cover">
+        </div>
+        <p class="mt-2 mb-0">Handball</p>
+      </div>
     </div>
+
+    <NuxtLink to="/activity" class="d-inline-block mt-4 text-decoration-none text-black">
+      Voir plus d'activités
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M17 7l-10 10" />
+        <path d="M8 7l9 0l0 9" />
+      </svg>
+    </NuxtLink>
+  </div>
 
     <div class="avis">
       <div class="container-fluid m-0 p-0">

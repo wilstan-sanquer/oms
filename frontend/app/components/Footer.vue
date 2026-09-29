@@ -9,8 +9,8 @@ const year = new Date().getFullYear()
         <div class="col-12 col-md-6">
           <h5 class="footer-title">Horaires</h5>
           <ul class="list-unstyled mb-0">
-            <li>Du lundi au jeudi : 14h - 18h</li>
-            <li>Le vendredi : 14h - 17h</li>
+            <li>Du lundi au jeudi : 8h - 12h & 14h - 18h</li>
+            <li>Le vendredi : 8h - 12h & 14h - 17h</li>
           </ul>
         </div>
 
