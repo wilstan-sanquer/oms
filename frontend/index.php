@@ -1,6 +1,15 @@
-<template>
-
-  <div class="search-wrapper">
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMS - Accueil</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="app/assets/styles/style.css">
+</head>
+<body>
+  <?php require __DIR__ . '/components/navbar.php'; ?>
+  <main><div class="search-wrapper">
     <div class="search-bar">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="search-icon" viewBox="0 0 16 16">
         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
@@ -9,58 +18,55 @@
     </div>
   </div>
 
-
-
   <div class="events mb-5">
       <h3>Nos prochains événements</h3>
       <div class="events-post">
-        <img src="../assets/images/affiches/affiche1.png" alt="Affiche événement 1">
-        <img src="../assets/images/affiches/affiche2.jpg" alt="Affiche événement 2">
-        <img src="../assets/images/affiches/affiche3.jpg" alt="Affiche événement 3">
+        <img src="app/assets/images/affiches/affiche1.png" alt="Affiche événement 1">
+        <img src="app/assets/images/affiches/affiche2.jpg" alt="Affiche événement 2">
+        <img src="app/assets/images/affiches/affiche3.jpg" alt="Affiche événement 3">
       </div>
     </div>
 
   <div class="activity container my-4">
     <h3 class="fw-normal mb-3">Nos activités</h3>
-
     <div class="row row-cols-4 g-4">
       <div class="col">
         <div class="ratio ratio-4x3">
-          <img src="../assets/images/sports/football.jpg" alt="Football" class="rounded-3 object-fit-cover">
+          <img src="app/assets/images/sports/football.jpg" alt="Football" class="rounded-3 object-fit-cover">
         </div>
         <p class="mt-2 mb-0">Football</p>
       </div>
 
       <div class="col">
         <div class="ratio ratio-4x3">
-          <img src="../assets/images/sports/basketball.jpg" alt="Basketball" class="rounded-3 object-fit-cover">
+          <img src="app/assets/images/sports/basketball.jpg" alt="Basketball" class="rounded-3 object-fit-cover">
         </div>
         <p class="mt-2 mb-0">Basketball</p>
       </div>
 
       <div class="col">
         <div class="ratio ratio-4x3">
-          <img src="../assets/images/sports/tennis.jpg" alt="Tennis" class="rounded-3 object-fit-cover">
+          <img src="app/assets/images/sports/tennis.jpg" alt="Tennis" class="rounded-3 object-fit-cover">
         </div>
         <p class="mt-2 mb-0">Tennis</p>
       </div>
 
       <div class="col">
         <div class="ratio ratio-4x3">
-          <img src="../assets/images/sports/handball.jpg" alt="Handball" class="rounded-3 object-fit-cover">
+          <img src="app/assets/images/sports/handball.jpg" alt="Handball" class="rounded-3 object-fit-cover">
         </div>
         <p class="mt-2 mb-0">Handball</p>
       </div>
     </div>
 
-    <NuxtLink to="/activity" class="d-inline-block mt-4 text-decoration-none text-black">
+    <a href="pages/activity.php" class="d-inline-block mt-4 text-decoration-none text-black">
       Voir plus d'activités
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
         <path d="M17 7l-10 10" />
         <path d="M8 7l9 0l0 9" />
       </svg>
-    </NuxtLink>
+    </a>
   </div>
 
     <div class="avis">
@@ -92,11 +98,12 @@
             style="border: 0"
             allowfullscreen
             loading="lazy"
-            referrerpolicy="strict-origin-when-cross-origin"
-        />
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </div>
       <p class="fs-4 lh-lg mt-5">
         Idéalement situé, notre OMS est à proximité immédiate de nombreuses salles et zones sportives. Un emplacement privilégié qui nous permet de vous offrir un large choix d'activités dans des infrastructures de qualité.
       </p>
-    </div>
-</template>
+    </div>  </main>
+  <?php require __DIR__ . '/components/footer.php'; ?>
+</body>
+</html>

@@ -1,5 +1,17 @@
-<template>
-  <div class="contact container my-5" style="color: #2C302E">
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMS - Contact</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../app/assets/styles/style.css">
+  <link rel="stylesheet" href="../app/assets/styles/contact.css">
+</head>
+<body>
+  <?php require __DIR__ . '/../components/navbar.php'; ?>
+  <main>
+<div class="contact container my-5" style="color: #2C302E">
     <h3 class="mb-4">Contact</h3>
 
     <div class="row g-5">
@@ -54,8 +66,7 @@
               style="border: 0"
               allowfullscreen
               loading="lazy"
-              referrerpolicy="strict-origin-when-cross-origin"
-          />
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
 
         <div class="row g-4">
@@ -82,6 +93,12 @@
       </div>
     </div>
   </div>
-</template>
 
-<style src="../assets/styles/contact.css"></style>
+
+
+
+  </main>
+  <?php require __DIR__ . '/../components/footer.php'; ?>
+</body>
+</html>
+

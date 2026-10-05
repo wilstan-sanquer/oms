@@ -1,5 +1,17 @@
-<template>
-  <div class="Formulaire">
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMS - Inscription</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../app/assets/styles/style.css">
+  <link rel="stylesheet" href="../app/assets/styles/inscription.css">
+</head>
+<body>
+  <?php require __DIR__ . '/../components/navbar.php'; ?>
+  <main>
+<div class="Formulaire">
     <div class="rounded-3 p-4 my-4 mx-auto" style="max-width: 600px;">
       <div class="ustify-content-center">
         <div class="w-100" style="max-width: 600px;">
@@ -51,6 +63,12 @@
       </div>
     </div>
   </div>
-</template>
 
-<style src="../assets/styles/inscription.css"></style>
+
+
+
+  </main>
+  <?php require __DIR__ . '/../components/footer.php'; ?>
+</body>
+</html>
+

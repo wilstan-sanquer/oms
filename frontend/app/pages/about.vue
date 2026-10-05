@@ -1,1 +1,0 @@
-<style src="../assets/styles/about.css"></style>
