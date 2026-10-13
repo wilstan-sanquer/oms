@@ -1,0 +1,142 @@
+.body {
+  margin: 0;
+  background: #fff;
+  color: #000;
+  font-family: "Lora", Georgia, "Times New Roman", serif;
+}
+
+main.activite {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem 6rem;
+  align-items: start;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 60px 70px 90px;
+  box-sizing: border-box;
+}
+
+.galerie {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.galerie .col {
+  padding: 0;
+}
+
+.galerie .col p {
+  display: none;
+}
+
+.photo-grande {
+  width: 100%;
+  max-width: 475px;
+  aspect-ratio: 475 / 395;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.photo-grande img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vignettes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  max-width: 475px;
+}
+
+.vignettes .photo {
+  aspect-ratio: 230 / 152;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.vignettes .photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.presentation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  padding-top: 0;
+}
+
+.presentation h1 {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 400;
+  font-size: 2.6rem;
+  margin: 0 0 3.2rem;
+}
+
+.presentation p {
+  font-size: 1.45rem;
+  line-height: 2.1;
+  max-width: 640px;
+  margin: 0 0 5.5rem;
+}
+
+.bouton {
+  display: inline-block;
+  align-self: center;
+  margin-right: 170px;
+  padding: 18px 60px;
+  border: 1.5px solid #000;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-size: 1.45rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.bouton:hover {
+  background: #000;
+  color: #fff;
+}
+
+@media (max-width: 992px) {
+  main.activite {
+    grid-template-columns: 1fr;
+    padding: 40px 24px 60px;
+    gap: 2.5rem;
+  }
+
+  .photo-grande,
+  .vignettes {
+    max-width: 100%;
+  }
+
+  .presentation {
+    align-items: center;
+    text-align: center;
+  }
+
+  .presentation h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .presentation p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+
+  .bouton {
+    margin-right: 0;
+    padding: 14px 44px;
+    font-size: 1.2rem;
+  }
+}
