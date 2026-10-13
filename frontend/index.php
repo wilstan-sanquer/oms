@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OMS - Accueil</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="app/assets/styles/style.css">
+  <link rel="stylesheet" href="assets/styles/style.css">
 </head>
 <body>
   <?php require __DIR__ . '/components/navbar.php'; ?>
@@ -18,12 +18,12 @@
     </div>
   </div>
 
-  <div class="events mb-5">
+    <div class="events mb-5">
       <h3>Nos prochains événements</h3>
       <div class="events-post">
-        <img src="app/assets/images/affiches/affiche1.png" alt="Affiche événement 1">
-        <img src="app/assets/images/affiches/affiche2.jpg" alt="Affiche événement 2">
-        <img src="app/assets/images/affiches/affiche3.jpg" alt="Affiche événement 3">
+        <img src="assets/images/affiches/affiche1.png" alt="Affiche événement 1">
+        <img src="assets/images/affiches/affiche2.jpg" alt="Affiche événement 2">
+        <img src="assets/images/affiches/affiche3.jpg" alt="Affiche événement 3">
       </div>
     </div>
 
@@ -32,28 +32,28 @@
     <div class="row row-cols-4 g-4">
       <div class="col">
         <div class="ratio ratio-4x3">
-          <img src="app/assets/images/sports/football.jpg" alt="Football" class="rounded-3 object-fit-cover">
+          <img src="assets/images/sports/football.jpg" alt="Football" class="rounded-3 object-fit-cover">
         </div>
         <p class="mt-2 mb-0">Football</p>
       </div>
 
       <div class="col">
         <div class="ratio ratio-4x3">
-          <img src="app/assets/images/sports/basketball.jpg" alt="Basketball" class="rounded-3 object-fit-cover">
+          <img src="assets/images/sports/basketball.jpg" alt="Basketball" class="rounded-3 object-fit-cover">
         </div>
         <p class="mt-2 mb-0">Basketball</p>
       </div>
 
       <div class="col">
         <div class="ratio ratio-4x3">
-          <img src="app/assets/images/sports/tennis.jpg" alt="Tennis" class="rounded-3 object-fit-cover">
+          <img src="assets/images/sports/tennis.jpg" alt="Tennis" class="rounded-3 object-fit-cover">
         </div>
         <p class="mt-2 mb-0">Tennis</p>
       </div>
 
       <div class="col">
         <div class="ratio ratio-4x3">
-          <img src="app/assets/images/sports/handball.jpg" alt="Handball" class="rounded-3 object-fit-cover">
+          <img src="assets/images/sports/handball.jpg" alt="Handball" class="rounded-3 object-fit-cover">
         </div>
         <p class="mt-2 mb-0">Handball</p>
       </div>

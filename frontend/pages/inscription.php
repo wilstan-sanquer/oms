@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OMS - Inscription</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../app/assets/styles/style.css">
-  <link rel="stylesheet" href="../app/assets/styles/inscription.css">
+  <link rel="stylesheet" href="../assets/styles/style.css">
+  <link rel="stylesheet" href="../assets/styles/inscription.css">
 </head>
 <body>
   <?php require __DIR__ . '/../components/navbar.php'; ?>
