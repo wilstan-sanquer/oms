@@ -1,4 +1,4 @@
-nav {
+    nav {
     background-color: #e9e3d5;
 }
 
@@ -89,4 +89,8 @@ nav {
     display: flex;
     margin-top: 100px;
     gap: 30px;
+}
+
+footer {
+    background-color: #e9e3d5;
 }
