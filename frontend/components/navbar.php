@@ -18,6 +18,21 @@ $frontendPath = rtrim(str_replace('\\', '/', $frontendPath), '/');
     <a href="<?= $frontendPath ?>/pages/activity.php" class="text-decoration-none text-black">Activités</a>
     <a href="<?= $frontendPath ?>/pages/stages.php" class="text-decoration-none text-black">Stages sportif</a>
     <a href="<?= $frontendPath ?>/pages/contact.php" class="text-decoration-none text-black">Contact</a>
-    <a href="<?= $frontendPath ?>/pages/login.php" class="text-decoration-none text-black">Connexion</a>
+    <?php if (!empty($_SESSION['username'])): ?>
+      <span class="d-flex align-items-center gap-1 fw-semibold" title="Vous êtes connecté">
+        <span class="rounded-circle bg-success d-inline-block" style="width: 10px; height: 10px;"></span>
+        <?= htmlspecialchars($_SESSION['username']) ?>
+      </span>
+      <a href="<?= $frontendPath ?>/pages/logout.php" class="text-decoration-none text-black">Déconnexion</a>
+    <?php else: ?>
+      <a href="<?= $frontendPath ?>/pages/login.php" class="text-decoration-none text-black">Connexion</a>
+    <?php endif; ?>
   </div>
 </nav>
+<?php if (!empty($_SESSION['flash'])): ?>
+  <div class="alert alert-success d-flex justify-content-between align-items-center m-3" role="alert">
+    <?= htmlspecialchars($_SESSION['flash']) ?>
+    <button type="button" class="btn-close" aria-label="Fermer" onclick="this.parentElement.remove()"></button>
+  </div>
+  <?php unset($_SESSION['flash']); ?>
+<?php endif; ?>

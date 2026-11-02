@@ -1,6 +1,7 @@
 <?php
 // Gabarit commun des pages sport. La page appelante définit $sport :
 // nom, titre, description, photo ['fichier', 'alt'], vignettes (optionnel).
+session_start();
 $imagesPath = '../../assets/images/sports/';
 ?>
 <!doctype html>

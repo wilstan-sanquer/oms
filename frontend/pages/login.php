@@ -19,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user && $password === $user['password']) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
-                header('Location: http://localhost/oms/frontend/index.php');
+                $_SESSION['flash'] = 'Connexion réussie. Bienvenue ' . $user['username'] . ' !';
+                header('Location: ../index.php');
                 exit();
             } else {
                 $erreur = "Identifiant ou mot de passe incorrect.";
