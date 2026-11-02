@@ -1,5 +1,8 @@
 <?php
 $frontendPath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+if (basename($frontendPath) === 'activity') {
+    $frontendPath = dirname($frontendPath);
+}
 if (basename($frontendPath) === 'pages') {
     $frontendPath = dirname($frontendPath);
 }

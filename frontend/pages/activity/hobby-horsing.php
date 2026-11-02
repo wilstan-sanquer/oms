@@ -1,20 +1,9 @@
-<!doctype html>
-<html lang="fr">
+<?php
+$sport = [
+  'nom' => 'Hobby horsing',
+  'titre' => 'Nos activités avec le hobby horsing',
+  'description' => 'Ce stage accueille les jeunes passionnés, débutants comme pratiquants réguliers, pour une semaine d\'immersion sportive. Encadrés par des éducateurs diplômés d\'État, les participants découvrent le dressage et le saut d\'obstacles avec leur cheval bâton à travers des ateliers ludiques, des parcours chronométrés et des démonstrations.',
+  'photo' => ['fichier' => 'Hobby-Horsing.jpg', 'alt' => 'Jeune pratiquante de hobby horsing sautant un obstacle'],
+];
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OMS - Basketball</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../assets/styles/activity.css">
-</head>
-
-<body>
-  <?php require_once __DIR__ . '/../../components/navbar.php'; ?>
-  <main>
-    
-  </main>
-  <?php require_once __DIR__ . '/../../components/footer.php'; ?>
-</body>
-
-</html>
+require __DIR__ . '/../../components/sport-page.php';

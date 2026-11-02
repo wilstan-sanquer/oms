@@ -1,4 +1,4 @@
-.body {
+body {
   margin: 0;
   background: #fff;
   color: #000;
@@ -7,34 +7,26 @@
 
 main.activite {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem 6rem;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 3rem 5rem;
   align-items: start;
-  max-width: 1500px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 60px 70px 90px;
+  padding: 50px 70px 90px;
   box-sizing: border-box;
 }
 
 .galerie {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-}
-
-.galerie .col {
-  padding: 0;
-}
-
-.galerie .col p {
-  display: none;
+  gap: 18px;
 }
 
 .photo-grande {
   width: 100%;
   max-width: 475px;
   aspect-ratio: 475 / 395;
-  border-radius: 14px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -48,13 +40,13 @@ main.activite {
 .vignettes {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  gap: 16px;
   max-width: 475px;
 }
 
 .vignettes .photo {
   aspect-ratio: 230 / 152;
-  border-radius: 14px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -76,27 +68,27 @@ main.activite {
 .presentation h1 {
   font-family: "Lora", Georgia, serif;
   font-weight: 400;
-  font-size: 2.6rem;
-  margin: 0 0 3.2rem;
+  font-size: 2.3rem;
+  margin: 0 0 2.5rem;
 }
 
 .presentation p {
-  font-size: 1.45rem;
+  font-size: 1.15rem;
   line-height: 2.1;
-  max-width: 640px;
-  margin: 0 0 5.5rem;
+  max-width: 560px;
+  margin: 0 0 4rem;
 }
 
 .bouton {
   display: inline-block;
   align-self: center;
-  margin-right: 170px;
-  padding: 18px 60px;
+  margin-left: 30%;
+  padding: 12px 50px;
   border: 1.5px solid #000;
   border-radius: 999px;
   background: #fff;
   color: #000;
-  font-size: 1.45rem;
+  font-size: 1.15rem;
   text-decoration: none;
   transition: background 0.2s, color 0.2s;
 }
@@ -124,19 +116,17 @@ main.activite {
   }
 
   .presentation h1 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
   }
 
   .presentation p {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     line-height: 1.8;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
   }
 
   .bouton {
-    margin-right: 0;
-    padding: 14px 44px;
-    font-size: 1.2rem;
+    margin-left: 0;
   }
 }
