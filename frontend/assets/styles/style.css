@@ -53,6 +53,117 @@
     width: auto;
 }
 
+.event-carte {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    color: #000;
+    text-decoration: none;
+}
+
+.event-carte img {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.event-carte:hover img {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* La date prend la largeur de l'affiche, sans la dépasser */
+.event-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 0;
+    min-width: 100%;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background-color: #e9e3d5;
+    font-weight: 500;
+    text-align: center;
+}
+
+.event-date svg {
+    flex: none;
+}
+
+/* Rangée des activités sur l'accueil */
+.activites-piste {
+    display: flex;
+    gap: 24px;
+}
+
+.activite-carte {
+    width: calc((100% - 3 * 24px) / 4);
+    min-width: 220px;
+    color: #000;
+    text-decoration: none;
+}
+
+.activite-carte img {
+    transition: transform 0.2s;
+}
+
+.activite-carte:hover img {
+    transform: scale(1.03);
+}
+
+.activity .defilement {
+    margin-right: 0;
+}
+
+.activity .defilement-precedent,
+.activity .defilement-suivant {
+    top: 80px;
+}
+
+/* Rangée qui défile horizontalement, avec flèches (voir assets/scripts/defilement.js) */
+.defilement {
+    position: relative;
+    margin-right: 50px;
+}
+
+.defilement-piste {
+    overflow-x: auto;
+    padding-bottom: 12px;
+}
+
+.defilement-piste > * {
+    flex: none;
+}
+
+.defilement-precedent,
+.defilement-suivant {
+    position: absolute;
+    top: 170px;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.defilement-precedent {
+    left: -22px;
+}
+
+.defilement-suivant {
+    right: -22px;
+}
+
+.defilement-precedent:hover,
+.defilement-suivant:hover {
+    background: #e9e3d5;
+}
+
 .activity {
     display: flex;
     flex-direction: column;

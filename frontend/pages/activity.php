@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OMS - Activités</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../assets/styles/activity.css">
+  <link rel="stylesheet" href="../assets/styles/activity.css?v=<?= @filemtime(__DIR__ . '/../assets/styles/activity.css') ?>">
 </head>
 
 <body>

@@ -3,3 +3,5 @@
 *.log
 .DS_Store
 .vscode/
+backend/config.local.php
+frontend/assets/images/uploads/

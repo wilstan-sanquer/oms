@@ -1,6 +1,7 @@
 <?php
 // 1. Démarrer la session et gérer la connexion
 session_start();
+require_once __DIR__ . '/../../backend/db.php';
 $erreur = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -9,8 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($username) && !empty($password)) {
         try {
-            $pdo = new PDO("mysql:host=localhost;dbname=oms_2026;charset=utf8", "root", "");
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo = db();
 
             $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ? OR email = ?');
             $stmt->execute([$username, $username]);
@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OMS - Connexion</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../assets/styles/style.css">
-  <link rel="stylesheet" href="../assets/styles/login.css">
+  <link rel="stylesheet" href="../assets/styles/style.css?v=<?= @filemtime(__DIR__ . '/../assets/styles/style.css') ?>">
+  <link rel="stylesheet" href="../assets/styles/login.css?v=<?= @filemtime(__DIR__ . '/../assets/styles/login.css') ?>">
 </head>
 <body>
   <?php require __DIR__ . '/../components/navbar.php'; ?>

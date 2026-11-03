@@ -1,4 +1,16 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require_once __DIR__ . '/../backend/db.php';
+require_once __DIR__ . '/components/evenement.php';
+
+// Événements créés depuis l'administration (table actualite), du plus récent au plus ancien
+try {
+    $evenements = db()->query('SELECT id, titre, image_path FROM actualite ORDER BY date_publication DESC')->fetchAll();
+} catch (PDOException $e) {
+    $evenements = [];
+}
+
+?>
 <!doctype html>
 <html lang="fr">
 <head>
@@ -6,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OMS - Accueil</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/styles/style.css">
+  <link rel="stylesheet" href="assets/styles/style.css?v=<?= @filemtime(__DIR__ . '/assets/styles/style.css') ?>">
 </head>
 <body>
   <?php require __DIR__ . '/components/navbar.php'; ?>
@@ -21,43 +33,54 @@
 
     <div class="events mb-5">
       <h3>Nos prochains événements</h3>
-      <div class="events-post">
-        <img src="assets/images/affiches/affiche1.png" alt="Affiche événement 1">
-        <img src="assets/images/affiches/affiche2.jpg" alt="Affiche événement 2">
-        <img src="assets/images/affiches/affiche3.jpg" alt="Affiche événement 3">
+      <div class="defilement">
+        <button type="button" class="defilement-precedent" aria-label="Événements précédents" hidden>‹</button>
+        <div class="events-post defilement-piste">
+          <?php foreach ($evenements as $evenement): ?>
+            <a href="pages/evenement.php?id=<?= $evenement['id'] ?>" class="event-carte" id="evenement-<?= $evenement['id'] ?>">
+              <img src="<?= htmlspecialchars($evenement['image_path']) ?>" alt="Affiche : <?= htmlspecialchars($evenement['titre']) ?>">
+              <span class="event-date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/></svg>
+                <?= htmlspecialchars(periode_evenement($evenement['titre'])) ?>
+              </span>
+            </a>
+          <?php endforeach; ?>
+          <img src="assets/images/affiches/affiche1.png" alt="Affiche événement 1">
+          <img src="assets/images/affiches/affiche2.jpg" alt="Affiche événement 2">
+          <img src="assets/images/affiches/affiche3.jpg" alt="Affiche événement 3">
+        </div>
+        <button type="button" class="defilement-suivant" aria-label="Événements suivants" hidden>›</button>
       </div>
     </div>
 
   <div class="activity container my-4">
     <h3 class="fw-normal mb-3">Nos activités</h3>
-    <div class="row row-cols-4 g-4">
-      <div class="col">
-        <div class="ratio ratio-4x3">
-          <img src="assets/images/sports/football.jpg" alt="Football" class="rounded-3 object-fit-cover">
-        </div>
-        <p class="mt-2 mb-0">Football</p>
+    <?php
+    // Les 8 sports du menu Activités, chacun mène à sa page
+    $sports = [
+        'Football' => ['football.php', 'football.jpg'],
+        'Basketball' => ['basketball.php', 'basketball.jpg'],
+        'Tennis' => ['tennis.php', 'tennis.jpg'],
+        'Handball' => ['handball.php', 'handball.jpg'],
+        'Disc golf' => ['disc-golf.php', 'Disc golf.jpg'],
+        'Hobby horsing' => ['hobby-horsing.php', 'Hobby-Horsing.jpg'],
+        'Cycle-ball' => ['cycle-ball.php', 'Cycle-Ball.jpg'],
+        'Quidditch' => ['quidditch.php', 'Quidditch.jpg'],
+    ];
+    ?>
+    <div class="defilement">
+      <button type="button" class="defilement-precedent" aria-label="Activités précédentes" hidden>‹</button>
+      <div class="activites-piste defilement-piste">
+        <?php foreach ($sports as $nom => [$page, $image]): ?>
+          <a href="pages/activity/<?= $page ?>" class="activite-carte">
+            <div class="ratio ratio-4x3">
+              <img src="assets/images/sports/<?= rawurlencode($image) ?>" alt="<?= $nom ?>" class="rounded-3 object-fit-cover">
+            </div>
+            <p class="mt-2 mb-0"><?= $nom ?></p>
+          </a>
+        <?php endforeach; ?>
       </div>
-
-      <div class="col">
-        <div class="ratio ratio-4x3">
-          <img src="assets/images/sports/basketball.jpg" alt="Basketball" class="rounded-3 object-fit-cover">
-        </div>
-        <p class="mt-2 mb-0">Basketball</p>
-      </div>
-
-      <div class="col">
-        <div class="ratio ratio-4x3">
-          <img src="assets/images/sports/tennis.jpg" alt="Tennis" class="rounded-3 object-fit-cover">
-        </div>
-        <p class="mt-2 mb-0">Tennis</p>
-      </div>
-
-      <div class="col">
-        <div class="ratio ratio-4x3">
-          <img src="assets/images/sports/handball.jpg" alt="Handball" class="rounded-3 object-fit-cover">
-        </div>
-        <p class="mt-2 mb-0">Handball</p>
-      </div>
+      <button type="button" class="defilement-suivant" aria-label="Activités suivantes" hidden>›</button>
     </div>
 
     <a href="pages/activity.php" class="d-inline-block mt-4 text-decoration-none text-black">
@@ -106,5 +129,6 @@
       </p>
     </div>  </main>
   <?php require __DIR__ . '/components/footer.php'; ?>
+  <script src="assets/scripts/defilement.js?v=<?= @filemtime(__DIR__ . '/assets/scripts/defilement.js') ?>"></script>
 </body>
 </html>

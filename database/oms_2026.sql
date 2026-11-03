@@ -71,7 +71,9 @@ CREATE TABLE IF NOT EXISTS `inscription` (
   `Prenom_parent` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Mail__parent` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Numero_tel_parent` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`ID`)
+  `id_stage` int DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `inscription_id_stage` (`id_stage`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

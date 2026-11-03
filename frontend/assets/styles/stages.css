@@ -1,0 +1,209 @@
+.stages {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 50px 24px 30px;
+  font-family: "Lora", Georgia, "Times New Roman", serif;
+}
+
+.stages h1,
+.albums h1 {
+  font-weight: 400;
+  font-size: 2.3rem;
+  margin-bottom: 2.5rem;
+}
+
+.stages-intro {
+  margin: -1.5rem 0 2rem;
+}
+
+.stages-intro a {
+  color: #000;
+}
+
+.stages-vide {
+  color: #777;
+  font-style: italic;
+}
+
+.stages .defilement {
+  margin-right: 0;
+}
+
+.stages .defilement-precedent,
+.stages .defilement-suivant {
+  top: 110px;
+}
+
+.stages-liste {
+  display: flex;
+  gap: 24px;
+}
+
+.stage-carte {
+  width: 300px;
+  padding: 12px;
+  border-radius: 14px;
+  scroll-margin-top: 20px;
+}
+
+/* Stage ou album qu'on vient de créer (lien avec #stage-12 / #album-3) */
+.stage-carte:target,
+.album:target {
+  background-color: #f6f3ec;
+  outline: 2px solid #e9e3d5;
+}
+
+.stage-carte img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.stage-carte h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.stage-carte p {
+  margin-bottom: 0.4rem;
+}
+
+.stage-description {
+  font-size: 0.95rem;
+}
+
+.stage-dates {
+  font-weight: 500;
+}
+
+.stage-places {
+  color: #555;
+}
+
+.stage-bouton {
+  display: inline-block;
+  padding: 8px 34px;
+  border: 1.5px solid #000;
+  border-radius: 999px;
+  color: #000;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.stage-bouton:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* Albums photo */
+.albums {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 50px 24px 30px;
+  font-family: "Lora", Georgia, "Times New Roman", serif;
+}
+
+.album {
+  padding: 16px;
+  margin-bottom: 32px;
+  border-radius: 14px;
+  scroll-margin-top: 20px;
+}
+
+.album h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.album-date {
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.album-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.album-photos img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.stage-bouton {
+  margin-top: 0.4rem;
+}
+
+/* Page d'un événement */
+.evenement {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px 24px;
+  font-family: "Lora", Georgia, "Times New Roman", serif;
+}
+
+.evenement-retour {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: #000;
+  text-decoration: none;
+}
+
+.evenement-retour:hover {
+  text-decoration: underline;
+}
+
+.evenement-contenu {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.evenement-affiche {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.evenement-infos h1 {
+  font-weight: 400;
+  font-size: 2.3rem;
+  margin-bottom: 1.5rem;
+}
+
+.evenement-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background-color: #e9e3d5;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.evenement-publie {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .evenement-contenu {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stage-carte {
+    width: 80vw;
+  }
+}

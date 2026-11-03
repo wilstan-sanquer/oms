@@ -15,8 +15,8 @@ $imagesPath = '../../assets/images/sports/';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../../assets/styles/style.css">
-  <link rel="stylesheet" href="../../assets/styles/sport.css">
+  <link rel="stylesheet" href="../../assets/styles/style.css?v=<?= @filemtime(__DIR__ . '/../assets/styles/style.css') ?>">
+  <link rel="stylesheet" href="../../assets/styles/sport.css?v=<?= @filemtime(__DIR__ . '/../assets/styles/sport.css') ?>">
 </head>
 
 <body>
@@ -46,7 +46,7 @@ $imagesPath = '../../assets/images/sports/';
 
       <p><?= htmlspecialchars($sport['description']) ?></p>
 
-      <a class="bouton" href="../inscription.php">S’inscrire</a>
+      <a class="bouton" href="../stages.php?activite=<?= urlencode($sport['nom']) ?>">S’inscrire</a>
 
     </section>
 
