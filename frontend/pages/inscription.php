@@ -1,24 +1,85 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../backend/db.php';
+require_once __DIR__ . '/../components/evenement.php';
 
-// Stage choisi sur la page des stages (inscription.php?stage=12)
-$stage = null;
-if (isset($_GET['stage'])) {
-    try {
+// On s'inscrit soit à un stage (inscription.php?stage=12), soit à un événement (inscription.php?evenement=3).
+// $cible décrit ce qui a été choisi, quel que soit son type.
+$cible = null;
+try {
+    if (isset($_GET['stage'])) {
         $stmt = db()->prepare('SELECT id, debut, fin, intitule, places_diponibles FROM stage WHERE id = ?');
         $stmt->execute([(int) $_GET['stage']]);
-        $stage = $stmt->fetch() ?: null;
-    } catch (PDOException $e) {
-        $stage = null;
+        if ($stage = $stmt->fetch()) {
+            $cible = [
+                'type' => 'stage',
+                'id' => (int) $stage['id'],
+                'nom' => $stage['intitule'],
+                'periode' => 'Du ' . date('d/m/Y', strtotime($stage['debut'])) . ' au ' . date('d/m/Y', strtotime($stage['fin'])),
+                'fin' => $stage['fin'],
+                'places' => (int) $stage['places_diponibles'],
+                'retour' => 'stages.php',
+                'changer' => 'Changer de stage',
+                'description' => null,
+            ];
+        }
+    } elseif (isset($_GET['evenement'])) {
+        $stmt = db()->prepare('SELECT id, titre, description FROM actualite WHERE id = ?');
+        $stmt->execute([(int) $_GET['evenement']]);
+        if ($evenement = $stmt->fetch()) {
+            // Dates et places sont enregistrées dans le titre et la description (voir admin/evenements.php)
+            $fin = preg_match('#au (\d{2})/(\d{2})/(\d{4})#', $evenement['titre'], $m) ? "$m[3]-$m[2]-$m[1]" : null;
+            $cible = [
+                'type' => 'evenement',
+                'id' => (int) $evenement['id'],
+                'nom' => 'Événement',
+                'periode' => periode_evenement($evenement['titre']),
+                'fin' => $fin,
+                'places' => places_evenement($evenement['description']),
+                'retour' => 'evenement.php?id=' . $evenement['id'],
+                'changer' => 'Retour à l\'événement',
+                'description' => $evenement['description'],
+            ];
+        }
     }
+} catch (PDOException $e) {
+    $cible = null;
 }
 
 $erreurs = [];
 $champs = ['nom_enfant', 'prenom_enfant', 'age_enfant', 'telephone', 'nom_parent', 'prenom_parent', 'email'];
 $valeurs = array_fill_keys($champs, '');
 
-if ($stage && $_SERVER['REQUEST_METHOD'] === 'POST') {
+// Réserve une place. Retourne false si c'est complet.
+function reserver_place(PDO $pdo, array $cible): bool
+{
+    if ($cible['type'] === 'stage') {
+        $stmt = $pdo->prepare('UPDATE stage SET places_diponibles = places_diponibles - 1 WHERE id = ? AND places_diponibles > 0');
+        $stmt->execute([$cible['id']]);
+        return $stmt->rowCount() > 0;
+    }
+    if ($cible['places'] === null) {
+        return true; // événement sans nombre de places : pas de limite
+    }
+    if ($cible['places'] <= 0) {
+        return false;
+    }
+    // La condition sur l'ancienne description évite de compter deux fois la même place
+    $stmt = $pdo->prepare('UPDATE actualite SET description = ? WHERE id = ? AND description = ?');
+    $stmt->execute(['Places : ' . ($cible['places'] - 1), $cible['id'], $cible['description']]);
+    return $stmt->rowCount() > 0;
+}
+
+function rendre_place(PDO $pdo, array $cible): void
+{
+    if ($cible['type'] === 'stage') {
+        $pdo->prepare('UPDATE stage SET places_diponibles = places_diponibles + 1 WHERE id = ?')->execute([$cible['id']]);
+    } elseif ($cible['places'] !== null) {
+        $pdo->prepare('UPDATE actualite SET description = ? WHERE id = ?')->execute([$cible['description'], $cible['id']]);
+    }
+}
+
+if ($cible && $_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($champs as $champ) {
         $valeurs[$champ] = trim($_POST[$champ] ?? '');
     }
@@ -36,24 +97,22 @@ if ($stage && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($valeurs['telephone'] !== '' && !preg_match('/^[0-9 +().-]{10,20}$/', $valeurs['telephone'])) {
         $erreurs[] = 'Le numéro de téléphone n\'est pas valide.';
     }
-    if ($stage['fin'] < date('Y-m-d')) {
-        $erreurs[] = 'Ce stage est terminé, les inscriptions sont fermées.';
+    if ($cible['fin'] !== null && $cible['fin'] < date('Y-m-d')) {
+        $erreurs[] = ($cible['type'] === 'stage' ? 'Ce stage est terminé' : 'Cet événement est terminé') . ', les inscriptions sont fermées.';
     }
 
     if (!$erreurs) {
         $pdo = db();
-        // Réserve une place : ne fait rien si le stage est déjà complet
-        $reserve = $pdo->prepare('UPDATE stage SET places_diponibles = places_diponibles - 1 WHERE id = ? AND places_diponibles > 0');
-        $reserve->execute([$stage['id']]);
-
-        if ($reserve->rowCount() === 0) {
-            $erreurs[] = 'Désolé, ce stage est complet.';
+        if (!reserver_place($pdo, $cible)) {
+            $erreurs[] = $cible['type'] === 'stage' ? 'Désolé, ce stage est complet.' : 'Désolé, cet événement est complet.';
         } else {
             try {
                 // La colonne ID n'a pas d'AUTO_INCREMENT : on calcule le prochain numéro
                 $id = (int) $pdo->query('SELECT COALESCE(MAX(ID), 0) + 1 FROM inscription')->fetchColumn();
-                $pdo->prepare('INSERT INTO inscription (ID, Nom_enfant, Prenom_enfant, Age_enfant, Nom_parent, Prenom_parent, Mail__parent, Numero_tel_parent, id_stage)
-                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
+                // id_stage pour un stage, id_evenement pour un événement
+                $colonneLien = $cible['type'] === 'stage' ? 'id_stage' : 'id_evenement';
+                $pdo->prepare("INSERT INTO inscription (ID, Nom_enfant, Prenom_enfant, Age_enfant, Nom_parent, Prenom_parent, Mail__parent, Numero_tel_parent, $colonneLien)
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
                     ->execute([
                         $id,
                         $valeurs['nom_enfant'],
@@ -63,15 +122,16 @@ if ($stage && $_SERVER['REQUEST_METHOD'] === 'POST') {
                         $valeurs['prenom_parent'],
                         $valeurs['email'],
                         $valeurs['telephone'],
-                        $stage['id'],
+                        $cible['id'],
                     ]);
-                $_SESSION['flash'] = 'L\'inscription de ' . $valeurs['prenom_enfant'] . ' au stage du '
-                    . date('d/m/Y', strtotime($stage['debut'])) . ' au ' . date('d/m/Y', strtotime($stage['fin'])) . ' est bien enregistrée.';
-                header('Location: stages.php');
+                $_SESSION['flash'] = 'L\'inscription de ' . $valeurs['prenom_enfant']
+                    . ($cible['type'] === 'stage' ? ' au stage' : ' à l\'événement')
+                    . ' (' . mb_strtolower($cible['periode']) . ') est bien enregistrée.';
+                header('Location: ' . ($cible['type'] === 'stage' ? 'stages.php' : '../index.php'));
                 exit();
             } catch (PDOException $e) {
                 // L'inscription a échoué : on rend la place réservée
-                $pdo->prepare('UPDATE stage SET places_diponibles = places_diponibles + 1 WHERE id = ?')->execute([$stage['id']]);
+                rendre_place($pdo, $cible);
                 error_log('Inscription impossible : ' . $e->getMessage());
                 $erreurs[] = 'L\'inscription n\'a pas pu être enregistrée. Veuillez réessayer plus tard.';
             }
@@ -106,19 +166,19 @@ function valeur(array $valeurs, string $champ): string
             Formulaire d'Inscription
           </h1>
 
-          <?php if (!$stage): ?>
+          <?php if (!$cible): ?>
           <p class="text-center">
-            Choisissez d'abord le stage auquel inscrire votre enfant.
+            Choisissez d'abord le stage ou l'événement auquel inscrire votre enfant.
           </p>
           <a href="stages.php" class="btn btn-light border rounded-pill d-block mx-auto mt-3 px-4" style="width: fit-content;">
             Voir les stages
           </a>
           <?php else: ?>
           <div class="bg-white rounded-3 p-3 mb-4 text-center">
-            <strong><?= htmlspecialchars($stage['intitule']) ?></strong><br>
-            Du <?= date('d/m/Y', strtotime($stage['debut'])) ?> au <?= date('d/m/Y', strtotime($stage['fin'])) ?>
-            · <?= (int) $stage['places_diponibles'] ?> places<br>
-            <a href="stages.php" class="small text-black">Changer de stage</a>
+            <strong><?= htmlspecialchars($cible['nom']) ?></strong><br>
+            <?= htmlspecialchars($cible['periode']) ?>
+            <?php if ($cible['places'] !== null): ?> · <?= $cible['places'] ?> places<?php endif; ?><br>
+            <a href="<?= htmlspecialchars($cible['retour']) ?>" class="small text-black"><?= htmlspecialchars($cible['changer']) ?></a>
           </div>
           <?php if ($erreurs): ?>
           <div class="alert alert-danger" role="alert">
@@ -126,10 +186,12 @@ function valeur(array $valeurs, string $champ): string
           </div>
           <?php endif; ?>
 
-          <?php if ((int) $stage['places_diponibles'] <= 0): ?>
-          <p class="text-center">Désolé, ce stage est complet.</p>
+          <?php if ($cible['fin'] !== null && $cible['fin'] < date('Y-m-d')): ?>
+          <p class="text-center"><?= $cible['type'] === 'stage' ? 'Ce stage est terminé' : 'Cet événement est terminé' ?>, les inscriptions sont fermées.</p>
+          <?php elseif ($cible['places'] !== null && $cible['places'] <= 0): ?>
+          <p class="text-center">Désolé, <?= $cible['type'] === 'stage' ? 'ce stage est complet' : 'cet événement est complet' ?>.</p>
           <?php else: ?>
-          <form method="POST" action="inscription.php?stage=<?= $stage['id'] ?>">
+          <form method="POST" action="inscription.php?<?= $cible['type'] ?>=<?= $cible['id'] ?>">
             <div class="row g-3">
 
               <div class="col-6">

@@ -16,6 +16,9 @@ if (!$evenement) {
     http_response_code(404);
 }
 $places = $evenement ? places_evenement($evenement['description']) : null;
+// Date de fin, enregistrée dans le titre ("... au 07/11/2026")
+$termine = $evenement && preg_match('#au (\d{2})/(\d{2})/(\d{4})#', $evenement['titre'], $m)
+    && "$m[3]-$m[2]-$m[1]" < date('Y-m-d');
 ?>
 <!doctype html>
 <html lang="fr">
@@ -51,7 +54,13 @@ $places = $evenement ? places_evenement($evenement['description']) : null;
             <p><?= $places ?> places</p>
           <?php endif; ?>
           <p class="evenement-publie">Publié le <?= date('d/m/Y', strtotime($evenement['date_publication'])) ?></p>
-          <a href="contact.php" class="stage-bouton">Nous contacter</a>
+          <?php if ($termine): ?>
+            <p class="stages-vide">Cet événement est terminé.</p>
+          <?php elseif ($places !== null && $places <= 0): ?>
+            <p class="stages-vide">Cet événement est complet.</p>
+          <?php else: ?>
+            <a href="inscription.php?evenement=<?= $evenement['id'] ?>" class="stage-bouton">S’inscrire</a>
+          <?php endif; ?>
         </div>
       </div>
     <?php endif; ?>
