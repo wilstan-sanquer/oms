@@ -4,11 +4,12 @@ require_once __DIR__ . '/../../backend/db.php';
 
 try {
     $pdo = db();
-    $albums = $pdo->query('SELECT id, nom, date_publication FROM album ORDER BY date_publication DESC')->fetchAll();
-    $photos = [];
-    foreach ($pdo->query('SELECT path, id_album FROM photo ORDER BY id') as $photo) {
-        $photos[$photo['id_album']][] = $photo['path'];
-    }
+    // Chaque album avec sa première photo (couverture) et son nombre de photos
+    $albums = $pdo->query('SELECT a.id, a.nom, a.date_publication, COUNT(p.id) AS nb_photos,
+                                  (SELECT path FROM photo WHERE id_album = a.id ORDER BY id LIMIT 1) AS couverture
+                           FROM album a LEFT JOIN photo p ON p.id_album = a.id
+                           GROUP BY a.id, a.nom, a.date_publication
+                           ORDER BY a.date_publication DESC')->fetchAll();
 } catch (PDOException $e) {
     $albums = null;
 }
@@ -25,6 +26,7 @@ try {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../assets/styles/style.css?v=<?= @filemtime(__DIR__ . '/../assets/styles/style.css') ?>">
   <link rel="stylesheet" href="../assets/styles/stages.css?v=<?= @filemtime(__DIR__ . '/../assets/styles/stages.css') ?>">
+  <link rel="stylesheet" href="../assets/styles/album.css?v=<?= @filemtime(__DIR__ . '/../assets/styles/album.css') ?>">
 </head>
 <body>
   <?php require __DIR__ . '/../components/navbar.php'; ?>
@@ -37,17 +39,22 @@ try {
       <p class="stages-vide">Aucun album pour le moment.</p>
     <?php endif; ?>
 
-    <?php foreach ($albums ?? [] as $album): ?>
-      <section class="album" id="album-<?= $album['id'] ?>">
-        <h2><?= htmlspecialchars($album['nom']) ?></h2>
-        <p class="album-date">Publié le <?= date('d/m/Y', strtotime($album['date_publication'])) ?></p>
-        <div class="album-photos">
-          <?php foreach ($photos[$album['id']] ?? [] as $chemin): ?>
-            <img src="../<?= htmlspecialchars($chemin) ?>" alt="Photo de l'album <?= htmlspecialchars($album['nom']) ?>" loading="lazy">
-          <?php endforeach; ?>
-        </div>
-      </section>
-    <?php endforeach; ?>
+    <div class="albums-grille">
+      <?php foreach ($albums ?? [] as $album): ?>
+        <a href="album-detail.php?id=<?= $album['id'] ?>" class="album-carte" id="album-<?= $album['id'] ?>">
+          <?php if ($album['couverture']): ?>
+            <img src="../<?= htmlspecialchars($album['couverture']) ?>" alt="" loading="lazy">
+          <?php else: ?>
+            <span class="album-carte-vide">Aucune photo</span>
+          <?php endif; ?>
+          <h2><?= htmlspecialchars($album['nom']) ?></h2>
+          <p class="album-date">
+            <?= $album['nb_photos'] ?> photo<?= $album['nb_photos'] > 1 ? 's' : '' ?>
+            · publié le <?= date('d/m/Y', strtotime($album['date_publication'])) ?>
+          </p>
+        </a>
+      <?php endforeach; ?>
+    </div>
   </main>
   <?php require __DIR__ . '/../components/footer.php'; ?>
 </body>

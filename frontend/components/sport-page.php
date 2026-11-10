@@ -1,7 +1,10 @@
 <?php
 // Gabarit commun des pages sport. La page appelante définit $sport :
-// nom, titre, description, photo ['fichier', 'alt'], vignettes (optionnel).
-session_start();
+// nom, titre, description, photo ['fichier', 'alt'] (ou ['src', 'alt'] pour une image hors du dossier sports),
+// vignettes (optionnel).
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $imagesPath = '../../assets/images/sports/';
 ?>
 <!doctype html>
@@ -25,7 +28,7 @@ $imagesPath = '../../assets/images/sports/';
     <section class="galerie">
 
       <div class="photo-grande">
-        <img src="<?= $imagesPath . rawurlencode($sport['photo']['fichier']) ?>" alt="<?= htmlspecialchars($sport['photo']['alt']) ?>">
+        <img src="<?= isset($sport['photo']['src']) ? htmlspecialchars($sport['photo']['src']) : $imagesPath . rawurlencode($sport['photo']['fichier']) ?>" alt="<?= htmlspecialchars($sport['photo']['alt']) ?>">
       </div>
 
       <?php if (!empty($sport['vignettes'])): ?>
@@ -44,7 +47,7 @@ $imagesPath = '../../assets/images/sports/';
 
       <h1><?= htmlspecialchars($sport['titre']) ?></h1>
 
-      <p><?= htmlspecialchars($sport['description']) ?></p>
+      <p><?= nl2br(htmlspecialchars($sport['description'])) ?></p>
 
       <a class="bouton" href="../stages.php?activite=<?= urlencode($sport['nom']) ?>">S’inscrire</a>
 

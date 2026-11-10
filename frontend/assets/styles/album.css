@@ -1,0 +1,221 @@
+/* Liste des albums : une carte par album, avec sa première photo en couverture */
+.albums-grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.album-carte {
+  display: block;
+  padding: 12px;
+  border-radius: 14px;
+  color: #000;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  scroll-margin-top: 20px;
+}
+
+.album-carte:hover,
+.album-carte:focus-visible,
+.album-carte:target {
+  background-color: #f6f3ec;
+  color: #000;
+}
+
+.album-carte img,
+.album-carte-vide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background-color: #e9e3d5;
+  color: #555;
+}
+
+.album-carte h2 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+/* Page d'un album */
+.album-entete {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 1rem;
+}
+
+.album-bouton {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 20px;
+  background-color: #000;
+  color: #fff;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.album-bouton:disabled {
+  opacity: 0.4;
+}
+
+.album-bouton-clair {
+  background-color: #fff;
+  color: #000;
+}
+
+.album-bouton-danger {
+  background-color: #b3261e;
+}
+
+.album-lien {
+  border: 0;
+  background: none;
+  padding: 0;
+  text-decoration: underline;
+  font-family: inherit;
+}
+
+.album-galerie {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding-bottom: 80px; /* place pour la barre de sélection */
+}
+
+.album-photo {
+  position: relative;
+  margin: 0;
+  cursor: zoom-in;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.album-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transition: transform 0.15s;
+}
+
+.album-case {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.album-coche {
+  display: none;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.35);
+  color: transparent;
+  font-size: 0.9rem;
+  line-height: 22px;
+  text-align: center;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+.en-selection .album-photo {
+  cursor: pointer;
+}
+
+.en-selection .album-coche {
+  display: block;
+}
+
+.album-photo.choisie {
+  background-color: #e9e3d5;
+}
+
+.album-photo.choisie img {
+  transform: scale(0.9);
+  border-radius: 8px;
+}
+
+.album-photo.choisie .album-coche {
+  background-color: #000;
+  color: #fff;
+}
+
+.album-case:focus-visible ~ img {
+  outline: 3px solid #0d6efd;
+  outline-offset: -3px;
+}
+
+.album-barre {
+  position: sticky;
+  bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: -64px;
+  padding: 10px 16px 10px 24px;
+  border-radius: 999px;
+  background-color: #e9e3d5;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.album-barre[hidden] {
+  display: none;
+}
+
+/* Photo agrandie */
+.album-visionneuse {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  max-width: 95vw;
+  max-height: 95vh;
+  overflow: visible;
+}
+
+.album-visionneuse::backdrop {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.album-visionneuse img {
+  display: block;
+  max-width: 85vw;
+  max-height: 85vh;
+  border-radius: 8px;
+}
+
+.album-visionneuse button {
+  position: absolute;
+  border: 0;
+  background: none;
+  color: #fff;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.visionneuse-fermer {
+  top: -48px;
+  right: 0;
+}
+
+.visionneuse-precedent {
+  top: 50%;
+  left: -48px;
+  transform: translateY(-50%);
+}
+
+.visionneuse-suivant {
+  top: 50%;
+  right: -48px;
+  transform: translateY(-50%);
+}

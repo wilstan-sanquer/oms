@@ -1,4 +1,8 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require_once __DIR__ . '/../components/activites.php';
+$activites = liste_activites();
+?>
 <!doctype html>
 <html lang="fr">
 
@@ -16,80 +20,18 @@
     <div class="activity container my-4">
       <h3 class="fw-normal mb-3">Nos activités</h3>
       <div class="row row-cols-4 g-4">
-
-        <a href="activity/football.php">
-          <div class="col">
-            <div class="ratio ratio-4x3">
-              <img src="../assets/images/sports/football.jpg" alt="Football" class="rounded-3 object-fit-cover">
+        <?php foreach ($activites as $nom => $activite): ?>
+          <a href="../<?= htmlspecialchars($activite['page']) ?>">
+            <div class="col">
+              <div class="ratio ratio-4x3">
+                <img src="../<?= src_image($activite['image']) ?>" alt="<?= htmlspecialchars($nom) ?>" class="rounded-3 object-fit-cover">
+              </div>
+              <p class="mt-2 mb-0"><?= htmlspecialchars($nom) ?></p>
             </div>
-            <p class="mt-2 mb-0">Football</p>
-          </div>
-        </a>
-
-        <a href="activity/basketball.php">
-          <div class="col">
-            <div class="ratio ratio-4x3">
-              <img src="../assets/images/sports/basketball.jpg" alt="Basketball" class="rounded-3 object-fit-cover">
-            </div>
-            <p class="mt-2 mb-0">Basketball</p>
-          </div>
-        </a>
-
-        <a href="activity/tennis.php">
-          <div class="col">
-            <div class="ratio ratio-4x3">
-              <img src="../assets/images/sports/tennis.jpg" alt="Tennis" class="rounded-3 object-fit-cover">
-            </div>
-            <p class="mt-2 mb-0">Tennis</p>
-          </div>
-        </a>
-
-        <a href="activity/handball.php">
-          <div class="col">
-            <div class="ratio ratio-4x3">
-              <img src="../assets/images/sports/handball.jpg" alt="Handball" class="rounded-3 object-fit-cover">
-            </div>
-            <p class="mt-2 mb-0">Handball</p>
-          </div>
-        </a>
-
-        <a href="activity/disc-golf.php">
-          <div class="col">
-            <div class="ratio ratio-4x3">
-              <img src="../assets/images/sports/Disc golf.jpg" alt="Disc golf" class="rounded-3 object-fit-cover">
-            </div>
-            <p class="mt-2 mb-0">Disc-golf</p>
-          </div>
-        </a>
-
-        <a href="activity/hobby-horsing.php">
-          <div class="col">
-            <div class="ratio ratio-4x3">
-              <img src="../assets/images/sports/Hobby-Horsing.jpg" alt="Disc golf" class="rounded-3 object-fit-cover">
-            </div>
-            <p class="mt-2 mb-0">Hobby-Horsing</p>
-          </div>
-        </a>
-
-        <a href="activity/cycle-ball.php">
-          <div class="col">
-            <div class="ratio ratio-4x3">
-              <img src="../assets/images/sports/Cycle-Ball.jpg" alt="Disc golf" class="rounded-3 object-fit-cover">
-            </div>
-            <p class="mt-2 mb-0">Cycle-Ball</p>
-          </div>
-        </a>
-
-        <a href="activity/quidditch.php">
-          <div class="col">
-            <div class="ratio ratio-4x3">
-              <img src="../assets/images/sports/Quidditch.jpg" alt="Disc golf" class="rounded-3 object-fit-cover">
-            </div>
-            <p class="mt-2 mb-0">Quidditch</p>
-          </div>
-        </a>
-        
+          </a>
+        <?php endforeach; ?>
       </div>
+    </div>
   </main>
   <?php require __DIR__ . '/../components/footer.php'; ?>
 </body>

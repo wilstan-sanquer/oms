@@ -1,20 +1,13 @@
 <?php
 require_once __DIR__ . '/../../components/admin.php';
 
-// Activités proposées et image associée à chacune
-$activites = [
-    'Football' => 'football.jpg',
-    'Basketball' => 'basketball.jpg',
-    'Tennis' => 'tennis.jpg',
-    'Handball' => 'handball.jpg',
-    'Disc golf' => 'Disc golf.jpg',
-    'Hobby horsing' => 'Hobby-Horsing.jpg',
-    'Cycle-ball' => 'Cycle-Ball.jpg',
-    'Quidditch' => 'Quidditch.jpg',
-];
+require_once __DIR__ . '/../../components/activites.php';
+
+// Activités proposées (sports de base + activités ajoutées) et image associée à chacune
+$activites = liste_activites();
 
 $pdo = db();
-$animateurs = $pdo->query('SELECT id, prenom, nom FROM users ORDER BY prenom, nom')->fetchAll();
+$animateurs = $pdo->query('SELECT id, username, prenom, nom FROM users ORDER BY prenom, nom, username')->fetchAll();
 $erreurs = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nomsAnimateurs = [];
     foreach ($animateurs as $a) {
         if (in_array((int) $a['id'], $idsAnimateurs, true)) {
-            $nomsAnimateurs[] = $a['prenom'] . ' ' . $a['nom'];
+            $nomsAnimateurs[] = nom_animateur($a);
         }
     }
 
@@ -66,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             implode(', ', $choixActivites),
             'Animateurs : ' . implode(', ', $nomsAnimateurs),
             $places,
-            'assets/images/sports/' . $activites[$choixActivites[0]],
+            $activites[$choixActivites[0]]['image'],
             '',
             $_SESSION['user_id'],
         ]);
@@ -122,7 +115,7 @@ admin_entete('Stages');
           <details class="choix">
             <summary>Veuillez choisir les activités</summary>
             <div class="choix-options">
-              <?php foreach ($activites as $nom => $image): ?>
+              <?php foreach (array_keys($activites) as $nom): ?>
                 <label><input type="checkbox" name="activites[]" value="<?= htmlspecialchars($nom) ?>"
                     <?= in_array($nom, $_POST['activites'] ?? [], true) ? 'checked' : '' ?>> <?= htmlspecialchars($nom) ?></label>
               <?php endforeach; ?>
@@ -131,13 +124,13 @@ admin_entete('Stages');
         </div>
       </div>
       <div class="admin-champ">
-        <span>Nom des animateurs</span>
+        <span>Nom des animateurs <a href="animateurs.php" class="small text-reset">(gérer)</a></span>
         <details class="choix">
           <summary>Veuillez choisir les animateurs</summary>
           <div class="choix-options">
             <?php foreach ($animateurs as $a): ?>
               <label><input type="checkbox" name="animateurs[]" value="<?= $a['id'] ?>"
-                  <?= in_array((string) $a['id'], $_POST['animateurs'] ?? [], true) ? 'checked' : '' ?>> <?= htmlspecialchars($a['prenom'] . ' ' . $a['nom']) ?></label>
+                  <?= in_array((string) $a['id'], $_POST['animateurs'] ?? [], true) ? 'checked' : '' ?>> <?= htmlspecialchars(nom_animateur($a)) ?></label>
             <?php endforeach; ?>
           </div>
         </details>

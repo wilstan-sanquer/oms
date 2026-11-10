@@ -113,6 +113,9 @@ body {
 
 .admin-formulaire input[type="date"],
 .admin-formulaire input[type="number"],
+.admin-formulaire input[type="text"],
+.admin-formulaire input[type="email"],
+.admin-formulaire textarea,
 .admin-nom-album input,
 .choix summary,
 .admin-fichier span {

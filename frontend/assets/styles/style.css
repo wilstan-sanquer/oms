@@ -182,16 +182,108 @@
     width: auto;
 }
 
-.container-avis {
-    display: flex;
-    padding: 50px 70px;
-    gap: 70px;
-    background-color: #e9e3d5;
-    justify-content: center;
-}
-
 .avis {
     margin-top: 100px;
+    scroll-margin-top: 20px;
+}
+
+/* Bandeau des avis clients : défile horizontalement s'il y en a beaucoup */
+.container-avis-fond {
+    padding: 40px 70px 30px;
+    background-color: #e9e3d5;
+}
+
+.avis .defilement {
+    margin-right: 0;
+}
+
+.avis .defilement-precedent,
+.avis .defilement-suivant {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.container-avis {
+    display: flex;
+    gap: 40px;
+}
+
+.avis-carte {
+    width: 300px;
+}
+
+.avis-etoiles {
+    color: #d4a017;
+    letter-spacing: 2px;
+}
+
+.avis-supprimer {
+    border: 0;
+    background: none;
+    color: #999;
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.avis-supprimer:hover {
+    color: #b3261e;
+}
+
+/* Formulaire « Laissez-nous votre avis » */
+.avis-formulaire {
+    max-width: 760px;
+    margin: 50px auto 0;
+    padding: 0 24px;
+}
+
+.avis-piege {
+    position: absolute;
+    left: -10000px;
+}
+
+/* Étoiles cliquables : les boutons radio sont rangés de 5 à 1, affichés de 1 à 5 */
+.avis-note {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.avis-note input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.avis-note label {
+    font-size: 2rem;
+    line-height: 1;
+    padding: 0 2px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.avis-note input:checked ~ label,
+.avis-note label:hover,
+.avis-note label:hover ~ label {
+    color: #d4a017;
+}
+
+.avis-note input:focus-visible + label {
+    outline: 2px solid #0d6efd;
+    border-radius: 4px;
+}
+
+.avis-bouton {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 26px;
+    background-color: #000;
+    color: #fff;
+}
+
+.avis-bouton:hover {
+    background-color: #333;
 }
 
 .map {

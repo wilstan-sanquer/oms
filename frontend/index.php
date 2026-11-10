@@ -2,12 +2,67 @@
 session_start();
 require_once __DIR__ . '/../backend/db.php';
 require_once __DIR__ . '/components/evenement.php';
+require_once __DIR__ . '/components/activites.php';
 
 // Événements créés depuis l'administration (table actualite), du plus récent au plus ancien
 try {
     $evenements = db()->query('SELECT id, titre, image_path FROM actualite ORDER BY date_publication DESC')->fetchAll();
 } catch (PDOException $e) {
     $evenements = [];
+}
+
+// Avis des clients (formulaire en bas de page)
+if (empty($_SESSION['csrf'])) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(16));
+}
+$erreursAvis = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!hash_equals($_SESSION['csrf'], $_POST['csrf'] ?? '')) {
+        $erreursAvis[] = 'Formulaire expiré, veuillez réessayer.';
+    } elseif (isset($_POST['supprimer_avis']) && !empty($_SESSION['user_id'])) {
+        db()->prepare('DELETE FROM avis WHERE id = ?')->execute([(int) $_POST['supprimer_avis']]);
+        $_SESSION['flash'] = 'L\'avis a été supprimé.';
+        header('Location: index.php#avis');
+        exit();
+    } elseif (($_POST['site'] ?? '') === '') { // champ piège invisible : rempli seulement par les robots
+        $nomAvis = trim($_POST['nom'] ?? '');
+        $messageAvis = trim($_POST['message'] ?? '');
+        $noteAvis = (int) ($_POST['note'] ?? 0);
+        if ($nomAvis === '' || mb_strlen($nomAvis) > 100) {
+            $erreursAvis[] = 'Veuillez indiquer votre prénom (100 caractères maximum).';
+        }
+        if ($noteAvis < 1 || $noteAvis > 5) {
+            $erreursAvis[] = 'Veuillez choisir une note de 1 à 5 étoiles.';
+        }
+        if ($messageAvis === '' || mb_strlen($messageAvis) > 1000) {
+            $erreursAvis[] = 'Veuillez écrire votre avis (1000 caractères maximum).';
+        }
+        if (!$erreursAvis) {
+            try {
+                db()->prepare('INSERT INTO avis (nom, note, message, date_publication) VALUES (?, ?, ?, NOW())')
+                    ->execute([$nomAvis, $noteAvis, $messageAvis]);
+                $_SESSION['avis_ok'] = true; // message affiché dans la section avis
+                header('Location: index.php#avis');
+                exit();
+            } catch (PDOException $e) {
+                $erreursAvis[] = 'Votre avis n\'a pas pu être enregistré, veuillez réessayer plus tard.';
+            }
+        }
+    }
+}
+
+try {
+    $avis = db()->query('SELECT id, nom, note, message, date_publication FROM avis ORDER BY date_publication DESC, id DESC LIMIT 12')->fetchAll();
+} catch (PDOException $e) {
+    $avis = [];
+}
+// Tant qu'aucun client n'a laissé d'avis, on garde les témoignages d'origine
+if (!$avis) {
+    $avis = [
+        ['id' => null, 'nom' => 'Stéphanie', 'note' => 5, 'message' => 'Mon enfant a passé d’excellentes vacances. Je recommande', 'date_publication' => null],
+        ['id' => null, 'nom' => 'Patricia', 'note' => 5, 'message' => 'Une équipe d\'animateurs au top et à l\'écoute. Je réinscrirai mes enfants sans hésiter.', 'date_publication' => null],
+        ['id' => null, 'nom' => 'Marc', 'note' => 5, 'message' => 'Inscriptions faciles et accueil chaleureux. Ma fille s\'est fait plein d\'amis cet été !', 'date_publication' => null],
+    ];
 }
 
 ?>
@@ -55,28 +110,16 @@ try {
 
   <div class="activity container my-4">
     <h3 class="fw-normal mb-3">Nos activités</h3>
-    <?php
-    // Les 8 sports du menu Activités, chacun mène à sa page
-    $sports = [
-        'Football' => ['football.php', 'football.jpg'],
-        'Basketball' => ['basketball.php', 'basketball.jpg'],
-        'Tennis' => ['tennis.php', 'tennis.jpg'],
-        'Handball' => ['handball.php', 'handball.jpg'],
-        'Disc golf' => ['disc-golf.php', 'Disc golf.jpg'],
-        'Hobby horsing' => ['hobby-horsing.php', 'Hobby-Horsing.jpg'],
-        'Cycle-ball' => ['cycle-ball.php', 'Cycle-Ball.jpg'],
-        'Quidditch' => ['quidditch.php', 'Quidditch.jpg'],
-    ];
-    ?>
+    <?php $sports = liste_activites(); // sports de base + activités ajoutées depuis l'administration ?>
     <div class="defilement">
       <button type="button" class="defilement-precedent" aria-label="Activités précédentes" hidden>‹</button>
       <div class="activites-piste defilement-piste">
-        <?php foreach ($sports as $nom => [$page, $image]): ?>
-          <a href="pages/activity/<?= $page ?>" class="activite-carte">
+        <?php foreach ($sports as $nom => $activite): ?>
+          <a href="<?= htmlspecialchars($activite['page']) ?>" class="activite-carte">
             <div class="ratio ratio-4x3">
-              <img src="assets/images/sports/<?= rawurlencode($image) ?>" alt="<?= $nom ?>" class="rounded-3 object-fit-cover">
+              <img src="<?= src_image($activite['image']) ?>" alt="<?= htmlspecialchars($nom) ?>" class="rounded-3 object-fit-cover">
             </div>
-            <p class="mt-2 mb-0"><?= $nom ?></p>
+            <p class="mt-2 mb-0"><?= htmlspecialchars($nom) ?></p>
           </a>
         <?php endforeach; ?>
       </div>
@@ -93,24 +136,70 @@ try {
     </a>
   </div>
 
-    <div class="avis">
-      <div class="container-fluid m-0 p-0">
-        <div class="container-avis">
-          <div class="w-25 bg-white p-2 rounded-3">
-            <h5>Stéphanie</h5>
-            <p>Mon enfant a passe d’excellent vacances. Je recommande</p>
+    <section class="avis" id="avis">
+      <div class="container-avis-fond">
+        <h3 class="fw-normal text-center mb-4">Ils nous font confiance</h3>
+        <div class="defilement">
+          <button type="button" class="defilement-precedent" aria-label="Avis précédents" hidden>‹</button>
+          <div class="container-avis defilement-piste">
+            <?php foreach ($avis as $unAvis): ?>
+              <article class="avis-carte bg-white p-3 rounded-3">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                  <h5 class="mb-1"><?= htmlspecialchars($unAvis['nom']) ?></h5>
+                  <?php if ($unAvis['id'] && !empty($_SESSION['user_id'])): ?>
+                    <form method="POST" action="index.php#avis" onsubmit="return confirm('Supprimer cet avis ?');">
+                      <input type="hidden" name="csrf" value="<?= $_SESSION['csrf'] ?>">
+                      <button type="submit" name="supprimer_avis" value="<?= $unAvis['id'] ?>" class="avis-supprimer" aria-label="Supprimer cet avis" title="Supprimer cet avis">×</button>
+                    </form>
+                  <?php endif; ?>
+                </div>
+                <p class="avis-etoiles mb-1" aria-label="<?= (int) $unAvis['note'] ?> sur 5"><?= str_repeat('★', (int) $unAvis['note']) . str_repeat('☆', 5 - (int) $unAvis['note']) ?></p>
+                <p class="mb-1"><?= nl2br(htmlspecialchars($unAvis['message'])) ?></p>
+                <?php if ($unAvis['date_publication']): ?>
+                  <small class="text-muted">Le <?= date('d/m/Y', strtotime($unAvis['date_publication'])) ?></small>
+                <?php endif; ?>
+              </article>
+            <?php endforeach; ?>
           </div>
-          <div class="w-25 bg-white p-2 rounded-3">
-            <h5>Patricia</h5>
-            <p>Une équipe d'animateurs au top et à l'écoute. Je réinscrirai mes enfants sans hésiter.</p>
-          </div>
-          <div class="w-25 bg-white p-2 rounded-3">
-            <h5>Marc</h5>
-            <p>Inscriptions faciles et accueil chaleureux. Ma fille s'est fait plein d'amis cet été !</p>
-          </div>
+          <button type="button" class="defilement-suivant" aria-label="Avis suivants" hidden>›</button>
         </div>
       </div>
-    </div>
+
+      <form method="POST" action="index.php#avis" class="avis-formulaire">
+        <h4 class="fw-normal mb-3">Laissez-nous votre avis</h4>
+        <?php if (!empty($_SESSION['avis_ok'])): ?>
+          <div class="alert alert-success">Merci pour votre avis ! Il est maintenant visible ci-dessus.</div>
+          <?php unset($_SESSION['avis_ok']); ?>
+        <?php endif; ?>
+        <?php if ($erreursAvis): ?>
+          <div class="alert alert-danger"><?= implode('<br>', array_map('htmlspecialchars', $erreursAvis)) ?></div>
+        <?php endif; ?>
+        <input type="hidden" name="csrf" value="<?= $_SESSION['csrf'] ?>">
+        <div class="avis-piege" aria-hidden="true">
+          <label>Ne pas remplir <input type="text" name="site" tabindex="-1" autocomplete="off"></label>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="avis-nom" class="form-label">Votre prénom</label>
+            <input type="text" id="avis-nom" name="nom" class="form-control" maxlength="100" required value="<?= htmlspecialchars($_POST['nom'] ?? '') ?>">
+          </div>
+          <fieldset class="col-md-6">
+            <legend class="form-label fs-6">Votre note</legend>
+            <div class="avis-note">
+              <?php for ($n = 5; $n >= 1; $n--): ?>
+                <input type="radio" id="note-<?= $n ?>" name="note" value="<?= $n ?>" required <?= (int) ($_POST['note'] ?? 0) === $n ? 'checked' : '' ?>>
+                <label for="note-<?= $n ?>" title="<?= $n ?> étoile<?= $n > 1 ? 's' : '' ?>">★</label>
+              <?php endfor; ?>
+            </div>
+          </fieldset>
+          <div class="col-12">
+            <label for="avis-message" class="form-label">Votre avis</label>
+            <textarea id="avis-message" name="message" class="form-control" rows="4" maxlength="1000" required placeholder="Racontez-nous votre expérience avec l’OMS…"><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
+          </div>
+        </div>
+        <button type="submit" class="avis-bouton mt-3">Publier mon avis</button>
+      </form>
+    </section>
 
     <div class="map">
       <div>

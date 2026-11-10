@@ -31,10 +31,21 @@ function champ_csrf(): string
 // À appeler dans une transaction (FOR UPDATE bloque les insertions simultanées).
 function prochain_id(PDO $pdo, string $table): int
 {
-    if (!in_array($table, ['stage', 'actualite', 'album', 'photo'], true)) {
+    if (!in_array($table, ['stage', 'actualite', 'album', 'photo', 'users'], true)) {
         throw new InvalidArgumentException("Table inconnue : $table");
     }
     return (int) $pdo->query("SELECT COALESCE(MAX(id), 0) + 1 FROM `$table` FOR UPDATE")->fetchColumn();
+}
+
+// Nom affiché d'un animateur (ligne de la table users). Les comptes de connexion comme « Admin »
+// n'ont pas forcément de nom ni de prénom : on affiche alors leur identifiant.
+function nom_animateur(array $user): string
+{
+    $nom = trim(($user['prenom'] ?? '') . ' ' . ($user['nom'] ?? ''));
+    if ($nom !== '') {
+        return $nom;
+    }
+    return trim($user['username'] ?? '') !== '' ? $user['username'] : 'Animateur n°' . $user['id'];
 }
 
 function date_fr(string $date): string

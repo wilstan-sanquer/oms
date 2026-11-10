@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message .= " $refusees fichier(s) ignoré(s) car ce n'étaient pas des images valides.";
             }
             $_SESSION['flash'] = $message;
-            header('Location: ../album.php#album-' . $idAlbum);
+            header('Location: ../album-detail.php?id=' . $idAlbum);
             exit();
         }
     }

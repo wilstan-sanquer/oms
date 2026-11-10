@@ -29,6 +29,8 @@ $frontendPath = rtrim(str_replace('\\', '/', $frontendPath), '/');
           <li><a href="<?= $frontendPath ?>/pages/admin/stages.php" class="d-block px-3 py-1 text-black text-decoration-none text-nowrap">Créer un stage</a></li>
           <li><a href="<?= $frontendPath ?>/pages/admin/evenements.php" class="d-block px-3 py-1 text-black text-decoration-none text-nowrap">Créer un événement</a></li>
           <li><a href="<?= $frontendPath ?>/pages/admin/album.php" class="d-block px-3 py-1 text-black text-decoration-none text-nowrap">Créer un album photo</a></li>
+          <li><a href="<?= $frontendPath ?>/pages/admin/activites.php" class="d-block px-3 py-1 text-black text-decoration-none text-nowrap">Ajouter une activité</a></li>
+          <li><a href="<?= $frontendPath ?>/pages/admin/animateurs.php" class="d-block px-3 py-1 text-black text-decoration-none text-nowrap">Gérer les animateurs</a></li>
         </ul>
       </div>
       <script>

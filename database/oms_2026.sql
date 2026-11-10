@@ -42,6 +42,40 @@ CREATE TABLE IF NOT EXISTS `actualite` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `activite`
+--
+
+DROP TABLE IF EXISTS `activite`;
+CREATE TABLE IF NOT EXISTS `activite` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nom` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image_path` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date_publication` datetime NOT NULL,
+  `id_user` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `activite_id_user_FK` (`id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `avis`
+--
+
+DROP TABLE IF EXISTS `avis`;
+CREATE TABLE IF NOT EXISTS `avis` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nom` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `note` tinyint NOT NULL,
+  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date_publication` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `album`
 --
 
@@ -140,6 +174,12 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 ALTER TABLE `actualite`
   ADD CONSTRAINT `actualite_id_user_FK` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`);
+
+--
+-- Contraintes pour la table `activite`
+--
+ALTER TABLE `activite`
+  ADD CONSTRAINT `activite_id_user_FK` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`);
 
 --
 -- Contraintes pour la table `album`
